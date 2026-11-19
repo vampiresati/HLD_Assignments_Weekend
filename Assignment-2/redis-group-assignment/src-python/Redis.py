@@ -61,7 +61,8 @@ def call(*args):
     try: return connection.send(*args)
     finally: connection.close()
 def str_(*args):
-    value = call(*args); return None if value is None else str(value)
+    value = call(*args);
+    return None if value is None else str(value)
 def num(*args):
     value = call(*args); return 0 if value is None else int(value)
 def list_(*args): return call(*args)
@@ -90,15 +91,60 @@ if __name__ == "__main__":
     # Start Redis first (for example: `redis-server`) and optionally configure
     # REDIS_HOST, REDIS_PORT, and REDIS_PASSWORD before running this file.
     demo_key = "redis-py-demo:message"
+    counter_key = "redis-py-demo:counter"
+    list_key = "redis-py-demo:items"
+    stock_key = "redis-py-demo:stock"
+    channel = "redis-py-demo:updates"
 
     try:
+        # `Redis.open()` creates a reusable connection. Use `send()` to issue
+        # any Redis command, then always close it when finished.
         connection = Redis.open()
         try:
             print("PING:", connection.send("PING"))
             print("SET:", connection.send("SET", demo_key, "Hello from Redis.py"))
             print("GET:", connection.send("GET", demo_key))
-            print("DEL:", connection.send("DEL", demo_key))
         finally:
             connection.close()
+
+        # `call()` opens, uses, and closes a connection for one command.
+        print("call SET:", call("SET", demo_key, "Hello from call()"))
+
+        # `str_()` is useful for bulk-string replies. Missing keys return None.
+        print("str_ GET:", str_("GET", demo_key))
+        print("str_ missing key:", str_("GET", "redis-py-demo:missing"))
+
+        # `num()` is useful for integer replies. A nil reply becomes 0.
+        print("num INCR:", num("INCR", counter_key))
+        print("num TTL:", num("TTL", demo_key))
+
+        # `list_()` returns an array reply as a Python list.
+        call("DEL", list_key)
+        call("RPUSH", list_key, "pizza", "burger")
+        print("list_ LRANGE:", list_("LRANGE", list_key, 0, -1))
+
+        # `eval()` runs a Lua script atomically. `keys` becomes KEYS in Lua;
+        # following arguments become ARGV.
+        call("SET", stock_key, 2)
+        decrement_if_available = """
+            local stock = tonumber(redis.call('GET', KEYS[1]))
+            if stock and stock > 0 then
+                return redis.call('DECR', KEYS[1])
+            end
+            return -1
+        """
+        print("eval remaining stock:", eval(decrement_if_available, [stock_key]))
+
+        # `subscribe()` listens to channels. `next(timeout_ms)` returns a
+        # message string, or None if no message arrives before the timeout.
+        subscription = subscribe(channel)
+        try:
+            call("PUBLISH", channel, "Hello subscriber")
+            print("subscribe next:", subscription.next(1000))
+        finally:
+            subscription.close()
+
+        # Remove the keys created by this demonstration.
+        print("DEL:", call("DEL", demo_key, counter_key, list_key, stock_key))
     except OSError as error:
         print(f"Could not connect to Redis at {Redis.host()}:{Redis.port()}: {error}")
