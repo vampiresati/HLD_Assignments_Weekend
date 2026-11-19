@@ -2,8 +2,10 @@
 import sys
 from OrderPipeline import MAIN
 stepMs = 2000
-def process(entry): raise NotImplementedError("TODO(1) not implemented yet")
-def log(order_id, message): print(f"  [kitchen] {order_id} -> {message}")
+def process(entry):
+    raise NotImplementedError("TODO(1) not implemented yet")
+def log(order_id, message):
+    print(f"  [kitchen] {order_id} -> {message}")
 def main(args=None):
     args = sys.argv[1:] if args is None else args
     name, crash = (args[0] if args else "w1"), "--crash" in args
@@ -17,4 +19,5 @@ def main(args=None):
                 print(f"[{name}] took {entry.fields['orderId']} ... and CRASHED (no XACK)"); return 1
             try: process(entry); MAIN.ack(entry.id)
             except RuntimeError as error: print(f"[{name}] failed {entry.id}: {error}")
-if __name__ == "__main__": main()
+if __name__ == "__main__":
+    main()

@@ -10,3 +10,5 @@ def assignRider(order_id, candidates):
     raise NotImplementedError("TODO(3) not implemented yet")
 def release(rider_id):
     Redis.call("DEL", f"rider:{rider_id}:order")
+
+

@@ -9,14 +9,19 @@ from OrderPipeline import MAIN
 
 PORT = int(os.getenv("PORT", "8080"))
 def _jsonable(value):
-    if is_dataclass(value): return asdict(value)
-    if isinstance(value, list): return [_jsonable(item) for item in value]
-    if isinstance(value, dict): return {key: _jsonable(item) for key, item in value.items()}
+    if is_dataclass(value): r
+    eturn asdict(value)
+    if isinstance(value, list):
+        return [_jsonable(item) for item in value]
+    if isinstance(value, dict):
+        return {key: _jsonable(item) for key, item in value.items()}
     return value
 
 class App(BaseHTTPRequestHandler):
-    def log_message(self, fmt, *args): print(f"{self.command:<6} {self.path:<40} -> " + fmt % args)
-    def _body(self): return Http.parseObject(self.rfile.read(int(self.headers.get("Content-Length", 0))).decode())
+    def log_message(self, fmt, *args):
+        print(f"{self.command:<6} {self.path:<40} -> " + fmt % args)
+    def _body(self):
+        return Http.parseObject(self.rfile.read(int(self.headers.get("Content-Length", 0))).decode())
     def _send(self, status, body=None, headers=None):
         import Json
         data = b"" if body is None else Json.write(_jsonable(body)).encode()
@@ -27,10 +32,14 @@ class App(BaseHTTPRequestHandler):
     def _bearer(self):
         value = self.headers.get("Authorization", "")
         return value[7:].strip() if value.startswith("Bearer ") else None
-    def do_GET(self): self.route()
-    def do_POST(self): self.route()
-    def do_PUT(self): self.route()
-    def do_DELETE(self): self.route()
+    def do_GET(self):
+        self.route()
+    def do_POST(self):
+        self.route()
+    def do_PUT(self):
+        self.route()
+    def do_DELETE(self):
+        self.route()
     def route(self):
         try:
             parsed, method = urlparse(self.path), self.command

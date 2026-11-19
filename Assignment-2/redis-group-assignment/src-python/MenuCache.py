@@ -6,7 +6,8 @@ TTL_JITTER_SECONDS = 10
 class Result:
     json: str
     hit: bool
-def key(restaurant_id): return f"menu:{restaurant_id}"
+def key(restaurant_id):
+    return f"menu:{restaurant_id}"
 def getMenu(restaurant_id):
     raise NotImplementedError("TODO(1) not implemented yet")
 def updatePrice(restaurant_id, item_id, new_price):
