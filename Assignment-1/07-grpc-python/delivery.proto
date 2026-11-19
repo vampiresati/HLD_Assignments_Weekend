@@ -1,0 +1,31 @@
+// The contract. Generate Python messages and stubs with grpc_tools.protoc.
+syntax = "proto3";
+
+package quickbite;
+
+service DeliveryService {
+  rpc GetEta (EtaRequest) returns (EtaReply);
+  rpc TrackRider (TrackRequest) returns (stream RiderLocation);
+  rpc UploadRoute (stream RiderLocation) returns (RouteSummary);
+}
+
+// Field numbers, rather than field names, are sent over the wire. Never
+// renumber or reuse them after clients exist.
+message EtaRequest { string order_id = 1; }
+message EtaReply {
+  string order_id = 1;
+  int32 minutes = 2;
+  string rider_name = 3;
+}
+message TrackRequest { string order_id = 1; }
+message RiderLocation {
+  string order_id = 1;
+  double lat = 2;
+  double lng = 3;
+  int32 meters_left = 4;
+  int64 timestamp_ms = 5;
+}
+message RouteSummary {
+  int32 points = 1;
+  double total_km = 2;
+}

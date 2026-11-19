@@ -1,0 +1,14 @@
+# The schema is the API contract. `!` means non-null.
+type Query {
+  restaurants(cuisine: String): [Restaurant!]!
+  restaurant(id: ID!): Restaurant
+}
+type Mutation { addReview(input: ReviewInput!): Review! }
+input ReviewInput { restaurantId: ID!, rating: Int!, comment: String }
+type Restaurant {
+  id: ID!, name: String!, cuisine: String!, rating: Float!, deliveryMinutes: Int!
+  menu(vegOnly: Boolean = false): [MenuItem!]!
+  reviews(last: Int = 3): [Review!]!
+}
+type MenuItem { id: ID!, name: String!, price: Int!, veg: Boolean!, bestseller: Boolean! }
+type Review { id: ID!, author: String!, rating: Int!, comment: String }
