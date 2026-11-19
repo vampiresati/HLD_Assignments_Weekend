@@ -65,8 +65,8 @@ add_menus_items_to_restaurant(Restaurant("r4", "Idli Express", "South Indian"), 
 add_menus_items_to_restaurant(Restaurant("r5", "Wok This Way", "Chinese"), MenuItem("hakka-noodles", "Hakka Noodles", 189, True), MenuItem("chilli-chicken", "Chilli Chicken", 249, False))
 
 
-# RESTAURANT_LOCATION = {"r1": (12.9340, 77.6260), "r2": (12.9710, 77.6400), "r3": (12.9130, 77.6430), "r4": (12.9300, 77.6200), "r5": (12.9690, 77.7490)}
-# RIDER_START = {"rider-ravi": (12.9352, 77.6245), "rider-imran": (12.9719, 77.6412), "rider-asha": (12.9121, 77.6446), "rider-karthik": (12.9698, 77.7500), "rider-simran": (12.8452, 77.6602)}
+RESTAURANT_LOCATION = {"r1": (12.9340, 77.6260), "r2": (12.9710, 77.6400), "r3": (12.9130, 77.6430), "r4": (12.9300, 77.6200), "r5": (12.9690, 77.7490)}
+RIDER_START = {"rider-ravi": (12.9352, 77.6245), "rider-imran": (12.9719, 77.6412), "rider-asha": (12.9121, 77.6446), "rider-karthik": (12.9698, 77.7500), "rider-simran": (12.8452, 77.6602)}
 
 
 if __name__=='__main__':
