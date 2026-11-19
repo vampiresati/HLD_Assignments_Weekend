@@ -84,3 +84,21 @@ class Subscription:
 
 def subscribe(*channels):
     return Subscription(*channels)
+
+
+if __name__ == "__main__":
+    # Start Redis first (for example: `redis-server`) and optionally configure
+    # REDIS_HOST, REDIS_PORT, and REDIS_PASSWORD before running this file.
+    demo_key = "redis-py-demo:message"
+
+    try:
+        connection = Redis.open()
+        try:
+            print("PING:", connection.send("PING"))
+            print("SET:", connection.send("SET", demo_key, "Hello from Redis.py"))
+            print("GET:", connection.send("GET", demo_key))
+            print("DEL:", connection.send("DEL", demo_key))
+        finally:
+            connection.close()
+    except OSError as error:
+        print(f"Could not connect to Redis at {Redis.host()}:{Redis.port()}: {error}")
