@@ -17,7 +17,7 @@ def getMenuProtected(restaurant_id):
 
 if __name__=="__main__":
     menu_key=key("r1")
-    Redis.call("SET", menu_key, "[{"name":"Masala Dosa"}]","EX 60")
+    Redis.call("SET", menu_key, '[{"name":"Masala Dosa"}]', "EX", TTL_SECONDS)
     print( Redis.str_("GET", menu_key))
     print(Redis.num("TTL", menu_key))
     print(Redis.call("DEL", menu_key))
