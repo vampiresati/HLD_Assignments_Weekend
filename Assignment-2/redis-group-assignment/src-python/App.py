@@ -9,8 +9,8 @@ from OrderPipeline import MAIN
 
 PORT = int(os.getenv("PORT", "8080"))
 def _jsonable(value):
-    if is_dataclass(value): r
-    eturn asdict(value)
+    if is_dataclass(value):
+        return asdict(value)
     if isinstance(value, list):
         return [_jsonable(item) for item in value]
     if isinstance(value, dict):
